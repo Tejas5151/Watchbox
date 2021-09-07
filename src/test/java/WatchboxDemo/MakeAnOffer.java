@@ -184,8 +184,7 @@ public class MakeAnOffer {
 			
 		}
 		
-		
-		public void verifyDeal() throws InterruptedException
+			public void verifyDeal() throws InterruptedException
 		{
 	   		JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("window.scrollBy(0,450)");
