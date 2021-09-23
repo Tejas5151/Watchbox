@@ -53,7 +53,7 @@ public class MakeAnOffer {
   		mknoffer.setUp();
   		mknoffer.navigateToWatchDetails();
   		mknoffer.submitOffer();
-  	    mknoffer.verifyOfferSubmittion();
+        mknoffer.verifyOfferSubmittion();
   		mknoffer.loginToSalesforce();
   		mknoffer.verifyAccount();
   		mknoffer.verifyDeal();
@@ -89,7 +89,7 @@ public class MakeAnOffer {
   		js.executeScript("window.scrollBy(0,4400)");
 		implicitWait();
 		
-   		WebElement watch=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//img[@src=\"https://watchbox-cdn.imgix.net/posted-product-images/637659148830727872.jpg?w=1184&h=1184\"]")));
+   		WebElement watch=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//img[@src='https://watchbox-cdn.imgix.net/posted-product-images/637666106718156028.jpg?w=1184&h=1184']")));
    		watch.click();
 
 		/*Boolean isText=driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).isDisplayed();
@@ -126,7 +126,7 @@ public class MakeAnOffer {
 			String actualSuccessMessage=driver.findElement(By.xpath("//div[@class='heading']")).getText();
 			String expectedSuccessMessage="Your offer has been received!";
 			System.out.println(actualSuccessMessage);
-	  	//	Assert.assertEquals(expectedSuccessMessage, actualSuccessMessage);
+	  		Assert.assertEquals(actualSuccessMessage, expectedSuccessMessage);
 		}
 		
 		public static void implicitWait()
@@ -149,23 +149,23 @@ public class MakeAnOffer {
 			searchBox.click();
 	   					
 			implicitWait();
-			Thread.sleep(10000);
+			Thread.sleep(5000);
 			
 			WebElement searchString=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@type='search' and @class='slds-input']")));
 			searchString.sendKeys(emailId);
 			searchString.sendKeys(Keys.ENTER);
 					
 			Thread.sleep(8000);
-			WebElement accTable = driver.findElement(By.xpath("//div[@class='resultsItem slds-col slds-no-flex slds-m-bottom_small'][2]//table[@role='grid']"));
+			WebElement accTable = driver.findElement(By.xpath("//div[@class='resultsItem slds-col slds-no-flex slds-m-bottom_small'][1]//table[@role='grid']"));
 			
 			//Account verification
-			WebElement accTableRow=accTable.findElement(By.xpath("//div[@class='resultsItem slds-col slds-no-flex slds-m-bottom_small'][2]//table[@role='grid']/tbody/tr/th/span/a"));
+			WebElement accTableRow=accTable.findElement(By.xpath("//div[@class='resultsItem slds-col slds-no-flex slds-m-bottom_small'][1]//table[@role='grid']/tbody/tr/th/span/a"));
 			String accRowText=accTableRow.getText();
 			System.out.println("Account Created: "+accRowText);
 			
 			//Deal verification
-			WebElement dealTable = driver.findElement(By.xpath("//div[@class='resultsItem slds-col slds-no-flex slds-m-bottom_small'][1]//table[@role='grid']"));
-			WebElement dealTableRow=dealTable.findElement(By.xpath("//div[@class='resultsItem slds-col slds-no-flex slds-m-bottom_small'][1]//table[@role='grid']/tbody/tr/th/span/a"));
+			WebElement dealTable = driver.findElement(By.xpath("//div[@class='resultsItem slds-col slds-no-flex slds-m-bottom_small'][2]//table[@role='grid']"));
+			WebElement dealTableRow=dealTable.findElement(By.xpath("//div[@class='resultsItem slds-col slds-no-flex slds-m-bottom_small'][2]//table[@role='grid']/tbody/tr/th/span/a"));
 			String dealRowText=dealTableRow.getText();
 			System.out.println("Deal Created: "+dealRowText);
 			
@@ -184,13 +184,12 @@ public class MakeAnOffer {
 			
 		}
 		
-		
-		public void verifyDeal() throws InterruptedException
+			public void verifyDeal() throws InterruptedException
 		{
 	   		JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("window.scrollBy(0,450)");
 			
-
+			Thread.sleep(3000);
 			driver.findElement(By.xpath("//a[@class='slds-card__header-link baseCard__header-title-container']/span[@title='Deals']")).click();
 						
 			Thread.sleep(5000);
@@ -215,12 +214,35 @@ public class MakeAnOffer {
 		//	System.out.println("Marketing Source: "+driver.findElement(By.xpath("//*[@id='window']")).getText());
 			
 			
+		    //Sales Details
 			System.out.println("Deal "+driver.findElement(By.xpath("//flexipage-component2[1]//a[@title='Sales'][1]")).getText());
 			
 			System.out.println("Watch Title: "+driver.findElement(By.xpath("//span[@class='watchtitle']")).getText());
 			
+			System.out.println("Customer Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Customer']//following::div[1]/lightning-formatted-number")).getText());
 			
+			System.out.println("Original Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Customer']//following::div[2]/lightning-formatted-number")).getText());
+			
+			System.out.println("Company Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Company']//following::div[1]/lightning-formatted-number")).getText());
+			
+			//Negotiate
+			WebElement showMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_icon-border-filled slds-button_icon-small']")));
+			showMenu.click();
+			
+			WebElement negotiateMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@role='menu']//span[text()='Negotiate']")));
+			negotiateMenu.click();
+			
+			WebElement companyOffer=wait.until(ExpectedConditions.elementToBeClickable(By.name("CompanyOfferAmount__c")));
+			companyOffer.sendKeys("92950");
+			
+			WebElement saveButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='slds-modal__container']//button[@title='Save']")));
+			saveButton.click();
+			
+			WebElement salesTotal=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//flexipage-component2[@data-component-id='WB_DealSummary']//div[@class='cWB_WatchSaleSummary']/div[2]/b/lightning-formatted-number")));
+			salesTotal.getText();
+					
 		}
+			
 		
 		void tearDown()
 		{
