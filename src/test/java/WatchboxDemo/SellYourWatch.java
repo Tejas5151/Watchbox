@@ -53,7 +53,7 @@ public class SellYourWatch {
    		loginToSalesforce();
    		verifyAccount();
    		verifyDeal();
-  		verifyOriginationsDetails();
+   		verifyOriginationDetails();
   		negotiateOrigination();
   		verifyDealSummary();
   		tearDown();
