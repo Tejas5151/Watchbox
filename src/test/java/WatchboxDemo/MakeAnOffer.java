@@ -23,7 +23,7 @@ import net.bytebuddy.utility.RandomString;
 public class MakeAnOffer {
 
 	static WebDriver driver;
-	WebDriverWait wait=new WebDriverWait(driver, 20);
+	static WebDriverWait wait=new WebDriverWait(driver, 20);
 	static ReadConfig readconfig=new ReadConfig();
 	static String webDriver=readconfig.getWebDriver();
 	static String chromepath=readconfig.getChromepath();
@@ -32,9 +32,9 @@ public class MakeAnOffer {
 	static String username = readconfig.getUsername();
 	static String password = readconfig.getPassword();
 	static String ExpectedTitle =readconfig.getExpectedTitle();
-	String fisrtName = RandomStringUtils.randomAlphabetic(5);
+	static String fisrtName = RandomStringUtils.randomAlphabetic(5);
 	String lastName = RandomStringUtils.randomAlphabetic(5);
-	String emailId=fisrtName+".Test@gmail.com";
+	static String emailId=fisrtName+".Test@gmail.com";
 	
 		public MakeAnOffer(WebDriver driver)
 	{
@@ -49,18 +49,18 @@ public class MakeAnOffer {
 		driver = new ChromeDriver(options);
 			
 		
-		MakeAnOffer mknoffer=new MakeAnOffer(driver);
-  		mknoffer.setUp();
-  		mknoffer.navigateToWatchDetails();
-  		mknoffer.submitOffer();
-        mknoffer.verifyOfferSubmittion();
-  		mknoffer.loginToSalesforce();
-  		mknoffer.verifyAccount();
-  		mknoffer.verifyDeal();
-  	//	mknoffer.tearDown();
+		//MakeAnOffer mknoffer=new MakeAnOffer(driver);
+  		setUp();
+  		navigateToWatchDetails();
+  		submitOffer();
+        verifyOfferSubmittion();
+  		loginToSalesforce();
+  		verifyAccount();
+  		verifyDeal();
+  		tearDown();
    		}
 	
-	public void setUp()
+	public static void setUp()
 	{
 
 		driver.manage().window().maximize();     
@@ -70,7 +70,7 @@ public class MakeAnOffer {
 		Assert.assertEquals(ExpectedTitle, ActualTitle);
 	
 	}
-	public void navigateToWatchDetails() throws InterruptedException
+	public static void navigateToWatchDetails() throws InterruptedException
 		{
 		WebElement cookieButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='affirm consent-btn close-button']")));
 		cookieButton.click();
@@ -104,7 +104,7 @@ public class MakeAnOffer {
 
 		}
 
-		public void submitOffer() throws Exception
+		public static void submitOffer() throws Exception
 		{
 			implicitWait();
    			driver.findElement(By.id("first_name")).sendKeys(fisrtName);
@@ -120,7 +120,7 @@ public class MakeAnOffer {
 		
 		}
 		
-		public void verifyOfferSubmittion() throws InterruptedException
+		public static void verifyOfferSubmittion() throws InterruptedException
 		{
 			Thread.sleep(5000);
 			String actualSuccessMessage=driver.findElement(By.xpath("//div[@class='heading']")).getText();
@@ -134,7 +134,7 @@ public class MakeAnOffer {
 			driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
 		}
 		
-		public void loginToSalesforce() throws InterruptedException
+		public static void loginToSalesforce() throws InterruptedException
 		{
 			driver.navigate().to(sfUrl);
 			driver.findElement(By.id("username")).sendKeys(username);
@@ -143,7 +143,7 @@ public class MakeAnOffer {
 			Thread.sleep(15000);
 		}
 		
-		public void verifyAccount() throws Exception
+		public static void verifyAccount() throws Exception
 		{
 			WebElement searchBox=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_neutral search-button slds-truncate' and @type='button']")));
 			searchBox.click();
@@ -184,7 +184,7 @@ public class MakeAnOffer {
 			
 		}
 		
-			public void verifyDeal() throws InterruptedException
+			public static void verifyDeal() throws InterruptedException
 		{
 	   		JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("window.scrollBy(0,450)");
@@ -244,7 +244,7 @@ public class MakeAnOffer {
 		}
 			
 		
-		void tearDown()
+		public static void tearDown()
 		{
 			driver.close();
 		}
