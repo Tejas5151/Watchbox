@@ -44,11 +44,7 @@ public class TradeYourWatch {
 		options.addArguments("--disable-notifications");
 		System.setProperty(webDriver,chromepath);
 		driver= new ChromeDriver();
-		driver.manage().window().maximize();        
-   		driver.get(baseUrl);
-   		implicitWait();
-  		String ActualTitle = driver.getTitle();
-  		Assert.assertEquals(ExpectedTitle, ActualTitle);
+
    		
   		//TradeYourWatch trade=new TradeYourWatch(driver);
   		setUp();
@@ -62,7 +58,7 @@ public class TradeYourWatch {
 		negotiateSales();
 		negotiateOrigination();
 		verifyDealSummary();
-  	//	tearDown();
+  		tearDown();
 	}
 	
 	public static void setUp()
