@@ -19,7 +19,7 @@ import com.watchbox.utilities.ReadConfig;
 public class SellYourWatch {
 
 	static WebDriver driver;
-	WebDriverWait wait=new WebDriverWait(driver, 20);
+	static WebDriverWait wait=new WebDriverWait(driver, 20);
 	static ReadConfig readconfig=new ReadConfig();
 	static String webDriver=readconfig.getWebDriver();
 	static String chromepath=readconfig.getChromepath();
@@ -28,9 +28,9 @@ public class SellYourWatch {
 	static String username = readconfig.getUsername();
 	static String password = readconfig.getPassword();
 	static String ExpectedTitle =readconfig.getExpectedTitle();
-	String fisrtName = RandomStringUtils.randomAlphabetic(5);
-	String lastName = RandomStringUtils.randomAlphabetic(5);
-	String emailId=fisrtName+".Test@gmail.com";
+	static String fisrtName = RandomStringUtils.randomAlphabetic(5);
+	static String lastName = RandomStringUtils.randomAlphabetic(5);
+	static String emailId=fisrtName+".Test@gmail.com";
 	
 	public SellYourWatch(WebDriver driver)
 	{
@@ -45,22 +45,22 @@ public class SellYourWatch {
 		System.setProperty(webDriver,chromepath);
 		driver = new ChromeDriver(options);
 		
-  		SellYourWatch sell=new SellYourWatch(driver);
-  		sell.setUp();
-   		//sell.navigateToSellWatchQuote();
-   		//sell.sellWatchQuote();
-   		//sell.verifyOfferSubmittion();
-   		sell.loginToSalesforce();
-   		sell.verifyAccount();
-  		sell.verifyDeal();
-  		sell.verifyOriginationsDetails();
-  	//	sell.negotiateOrigination();
-  		sell.verifyDealSummary();
-  	//	sell.tearDown();
+  	//	SellYourWatch sell=new SellYourWatch(driver);
+  		setUp();
+   		navigateToSellWatchQuote();
+   		sellWatchQuote();
+   		verifyOfferSubmittion();
+   		loginToSalesforce();
+   		verifyAccount();
+   		verifyDeal();
+  		verifyOriginationsDetails();
+  		negotiateOrigination();
+  		verifyDealSummary();
+  		tearDown();
    		
 	}
 	
-	public void setUp()
+	public static void setUp()
 	{
    		driver.manage().window().maximize();        
    		driver.get(baseUrl);
@@ -70,7 +70,7 @@ public class SellYourWatch {
 	
 	}
 	
-		public void navigateToSellWatchQuote() throws Exception
+		public static void navigateToSellWatchQuote() throws Exception
 		{
 			WebElement cookieButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='affirm consent-btn close-button']")));
 			cookieButton.click();
@@ -91,7 +91,7 @@ public class SellYourWatch {
 	   		getMyQuoteButton.click();
 		
 		}
-   		public void sellWatchQuote() throws InterruptedException
+   		public static void sellWatchQuote() throws InterruptedException
    		{
    	   	//CONTACT INFORMATION
    		implicitWait(); 
@@ -118,7 +118,7 @@ public class SellYourWatch {
    		implicitWait();
    		}
 	
-		public void verifyOfferSubmittion()
+		public static void verifyOfferSubmittion()
 		{
 			WebElement actualSuccessMessage=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class=\"col-12 col-lg-9 col-xl-7 text-center\"]/h1")));
 			actualSuccessMessage.getText();
@@ -131,7 +131,7 @@ public class SellYourWatch {
 	driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
 	}
 	
-	public void loginToSalesforce() throws InterruptedException
+	public static void loginToSalesforce() throws InterruptedException
 	{
 		driver.navigate().to(sfUrl);
 		driver.findElement(By.id("username")).sendKeys(username);
@@ -140,7 +140,7 @@ public class SellYourWatch {
 		Thread.sleep(15000);
 	}
 	
-	public void verifyAccount() throws Exception
+	public static void verifyAccount() throws Exception
 	{
 		
 		WebElement searchBox=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_neutral search-button slds-truncate' and @type='button']")));
@@ -182,7 +182,7 @@ public class SellYourWatch {
 		System.out.println("Phone Number: "+accPhoneNumberText);
 
 	}
-	public void verifyDeal() throws InterruptedException
+	public static void verifyDeal() throws InterruptedException
 	{
    		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("window.scrollBy(0,450)");
@@ -212,20 +212,21 @@ public class SellYourWatch {
 	    Thread.sleep(5000);
 	}	    
 	
-	  public void verifyOriginationsDetails()
-	  {
-		    System.out.println("Deal "+driver.findElement(By.xpath("//flexipage-component2[2]//a[@title='Sales'][1]")).getText());
-		    
-			System.out.println("Watch Title: "+driver.findElement(By.xpath("//flexipage-component2[2]//span[@class='watchtitle']")).getText());
-		    
-			System.out.println("Customer Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Customer']//following::div[1]/lightning-formatted-number")).getText());
-			
-			System.out.println("Original Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Customer']//following::div[2]/lightning-formatted-number")).getText());
-			
-			System.out.println("Company Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Company']//following::div[1]/lightning-formatted-number")).getText());
-		
-	}
-	public void negotiateOrigination() throws InterruptedException
+    public static void verifyOriginationDetails()
+    {
+    System.out.println("Deal "+driver.findElement(By.xpath("//a[@title='Sales']/span[contains(text(),'Originations')]")).getText());
+    
+	System.out.println("Watch Title: "+driver.findElement(By.xpath("//flexipage-component2[2]//span[@class='watchtitle']")).getText());
+    
+	System.out.println("Customer Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Customer']//following::div[1]/lightning-formatted-number")).getText());
+	
+	System.out.println("Original Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Customer']//following::div[2]/lightning-formatted-number")).getText());
+	
+	System.out.println("Company Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Company']//following::div[1]/lightning-formatted-number")).getText());
+	
+     
+}
+	public static void negotiateOrigination() throws InterruptedException
 	{	
 		//Negotiate
 		WebElement showMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_icon-border-filled slds-button_icon-small']")));
@@ -244,7 +245,7 @@ public class SellYourWatch {
 		System.out.println("Company Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Company']//following::div[1]/lightning-formatted-number")).getText());
 		
 	}
-	public void verifyDealSummary() throws InterruptedException
+	public static void verifyDealSummary() throws InterruptedException
 	{
 		
    		JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -267,9 +268,9 @@ public class SellYourWatch {
 		
 			int ototal=Integer.parseInt(originationsTotal);
 
-			System.out.println("Deal Subtotal: "+originationsTotal);
+			System.out.println("Deal Subtotal: "+ototal);
 	}
-	void tearDown()
+	public static void tearDown()
 	{
 		driver.close();
 	}
