@@ -1,5 +1,7 @@
 package WatchboxDemo;
 
+import static org.testng.Assert.assertEquals;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +36,8 @@ public class MakeAnOffer {
 	static String ExpectedTitle =readconfig.getExpectedTitle();
 	static String fisrtName = RandomStringUtils.randomAlphabetic(5);
 	String lastName = RandomStringUtils.randomAlphabetic(5);
+	static String accName;
+	static String watchTitle;
 	static String emailId=fisrtName+".Test@gmail.com";
 	
 		public MakeAnOffer(WebDriver driver)
@@ -57,7 +61,11 @@ public class MakeAnOffer {
   		loginToSalesforce();
   		verifyAccount();
   		verifyDeal();
-  		tearDown();
+  		verifySalesDetails();
+  		negotiateSales();
+  		verifyDealSummary();
+  		verifyOfferOnWBX();
+   		tearDown();
    		}
 	
 	public static void setUp()
@@ -127,7 +135,7 @@ public class MakeAnOffer {
 			String expectedSuccessMessage="Your offer has been received!";
 			System.out.println(actualSuccessMessage);
 	  		Assert.assertEquals(actualSuccessMessage, expectedSuccessMessage);
-		}
+	  			}
 		
 		public static void implicitWait()
 		{
@@ -203,7 +211,8 @@ public class MakeAnOffer {
 
 			System.out.println("Deal Name: "+driver.findElement(By.xpath("//lightning-formatted-name[@data-output-element-id='output-field']")).getText());
 
-			System.out.println("Account Name: "+driver.findElement(By.xpath("//*[@id='brandBand_2']//div/p[@title='Account Name']/parent::div/p[2]/slot/force-lookup/div/force-hoverable-link/div/a/slot/slot/span")).getText());
+		    accName=driver.findElement(By.xpath("//*[@id='brandBand_2']//div/p[@title='Account Name']/parent::div/p[2]/slot/force-lookup/div/force-hoverable-link/div/a/slot/slot/span")).getText();
+			System.out.println("Account Name: "+accName);
 			
 			System.out.println("Customer Email: "+driver.findElement(By.xpath("//*[@id='brandBand_2']//div/p[@title='Customer Email']/parent::div//a")).getText());
 			
@@ -213,35 +222,108 @@ public class MakeAnOffer {
 			
 		//	System.out.println("Marketing Source: "+driver.findElement(By.xpath("//*[@id='window']")).getText());
 			
-			
-		    //Sales Details
-			System.out.println("Deal "+driver.findElement(By.xpath("//flexipage-component2[1]//a[@title='Sales'][1]")).getText());
-			
-			System.out.println("Watch Title: "+driver.findElement(By.xpath("//span[@class='watchtitle']")).getText());
-			
-			System.out.println("Customer Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Customer']//following::div[1]/lightning-formatted-number")).getText());
-			
-			System.out.println("Original Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Customer']//following::div[2]/lightning-formatted-number")).getText());
-			
-			System.out.println("Company Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Company']//following::div[1]/lightning-formatted-number")).getText());
-			
-			//Negotiate
-			WebElement showMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_icon-border-filled slds-button_icon-small']")));
-			showMenu.click();
-			
-			WebElement negotiateMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@role='menu']//span[text()='Negotiate']")));
-			negotiateMenu.click();
-			
-			WebElement companyOffer=wait.until(ExpectedConditions.elementToBeClickable(By.name("CompanyOfferAmount__c")));
-			companyOffer.sendKeys("92950");
-			
-			WebElement saveButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='slds-modal__container']//button[@title='Save']")));
-			saveButton.click();
-			
-			WebElement salesTotal=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//flexipage-component2[@data-component-id='WB_DealSummary']//div[@class='cWB_WatchSaleSummary']/div[2]/b/lightning-formatted-number")));
-			salesTotal.getText();
-					
 		}
+			
+		    public static void verifySalesDetails()
+		    {
+			    System.out.println("Deal "+driver.findElement(By.xpath("//a[@title='Sales']/span[contains(text(),'Sales')]")).getText());
+			    
+			    watchTitle=driver.findElement(By.xpath("//span[@class='watchtitle']")).getText();
+				System.out.println("Watch Title: "+watchTitle);
+			    
+				System.out.println("Customer Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Customer']//following::div[1]/lightning-formatted-number")).getText());
+				
+				System.out.println("Original Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Customer']//following::div[2]/lightning-formatted-number")).getText());
+				
+				System.out.println("Company Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Company']//following::div[1]/lightning-formatted-number")).getText());	
+		    }
+	    
+		    
+			public static void negotiateSales()
+			{	
+				WebElement showMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_icon-border-filled slds-button_icon-small']")));
+				showMenu.click();
+				
+				WebElement negotiateMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@role='menu']//span[text()='Negotiate']")));
+				negotiateMenu.click();
+				
+				WebElement companyOffer=wait.until(ExpectedConditions.elementToBeClickable(By.name("CompanyOfferAmount__c")));
+				companyOffer.sendKeys("92950");
+						
+				WebElement saveButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='slds-modal__container']//button[@title='Save']")));
+				saveButton.click();
+				
+				WebElement salesTotal=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//flexipage-component2[@data-component-id='WB_DealSummary']//div[@class='cWB_WatchSaleSummary']/div[2]/b/lightning-formatted-number")));
+				salesTotal.getText();
+				
+				driver.navigate().refresh();
+				
+			}	    
+
+			public static void verifyDealSummary() throws InterruptedException
+			{
+				
+		   		JavascriptExecutor js = (JavascriptExecutor) driver;
+				js.executeScript("window.scrollBy(0,450)");
+				
+				implicitWait();
+				String salesTotal=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//flexipage-component2[@data-component-id='WB_DealSummary']//div[@class='cWB_WatchSaleSummary']/div[2]/b/lightning-formatted-number"))).getText();
+				//	salesTotal.getText();	
+					
+					String estimatedTax=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='brandBand_2']//div[@class='forceRelatedListContainer cWB_DealSummary']/article/div[2]/div[7]/div[4]/div/lightning-formatted-number"))).getText();
+				//	estimatedTax.getText();
+					
+					String watchCarePlan=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='brandBand_2']//div[@class='forceRelatedListContainer cWB_DealSummary']/article/div[2]/div[9]/div[3]/div/lightning-formatted-number"))).getText();
+				//	watchCarePlan.getText();
+					
+					String serviceCharges=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='brandBand_2']//div[@class='forceRelatedListContainer cWB_DealSummary']/article/div[2]/div[11]/div[3]/div/lightning-formatted-number"))).getText();
+				//	serviceCharges.getText();
+					
+					String actualDealSubtatal=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='brandBand_2']//div[@class='forceRelatedListContainer cWB_DealSummary']/article/div[2]/div[14]/div[3]/div/lightning-formatted-number"))).getText();
+					
+				
+					int stotal=Integer.parseInt(salesTotal);
+					int et=Integer.parseInt(estimatedTax);
+					int wcp=Integer.parseInt(watchCarePlan);
+					int sc=Integer.parseInt(serviceCharges);
+					
+					int dealSubTotal=stotal+et+wcp+sc;
+					System.out.println("Deal Subtotal: "+dealSubTotal);
+					Assert.assertEquals(actualDealSubtatal, dealSubTotal);
+					
+			}
+			
+			public static void verifyOfferOnWBX()
+			{
+				driver.findElement(By.xpath("//flexipage-component2[1]//span[text()='WBX Linked']")).click();
+				
+				WebElement wt=driver.findElement(By.xpath("//div[@class='slds-grid primaryFieldRow']//lightning-formatted-text"));
+				wt.getText();
+				Assert.assertEquals(wt, watchTitle);
+				
+				
+			//Market Prize Details
+				WebElement salesOfferInfoTable = driver.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table[@role='grid']"));
+				
+				//Account verification
+				String saleDate=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[1]/lightning-primitive-cell-factory/span/div/lightning-formatted-date-time")).getText();
+				System.out.println("Sales offer Information: "+saleDate);
+				
+				String saleStatus=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[2]/lightning-primitive-cell-factory/span/div/lightning-base-formatted-text")).getText();
+				System.out.println("Sales offer Information: "+saleStatus);
+								
+				String saleTrader=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[3]/lightning-primitive-cell-factory/span/div/lightning-base-formatted-text")).getText();
+				System.out.println("Sales offer Information: "+saleTrader);
+				
+				String saleWatchboxOffer=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[4]/lightning-primitive-cell-factory/span/div/lightning-formatted-number")).getText();
+				System.out.println("Sales offer Information: "+saleWatchboxOffer);
+				
+				String saleClientOffer=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[5]/lightning-primitive-cell-factory/span/div/lightning-formatted-number")).getText();
+				System.out.println("Sales offer Information: "+saleClientOffer);
+				
+
+			}
+
 			
 		
 		public static void tearDown()

@@ -30,8 +30,11 @@ public class TradeYourWatch {
 	static String password = readconfig.getPassword();
 	static String ExpectedTitle =readconfig.getExpectedTitle();
 	static String fisrtName = RandomStringUtils.randomAlphabetic(5);
-	String lastName = RandomStringUtils.randomAlphabetic(5);
+//	String lastName = RandomStringUtils.randomAlphabetic(5);
 	static String emailId=fisrtName+".Test@gmail.com";
+	static String accName;
+	static String salesWatchTitle;
+	static String originationWatchTitle;
 	
 	public TradeYourWatch(WebDriver driver)
 	{
@@ -58,6 +61,7 @@ public class TradeYourWatch {
 		negotiateSales();
 		negotiateOrigination();
 		verifyDealSummary();
+		verifyOfferOnWBX();
   		tearDown();
 	}
 	
@@ -218,7 +222,8 @@ public class TradeYourWatch {
     {
 	    System.out.println("Deal "+driver.findElement(By.xpath("//a[@title='Sales']/span[contains(text(),'Sales')]")).getText());
 	    
-		System.out.println("Watch Title: "+driver.findElement(By.xpath("//flexipage-component2[1]//span[@class='watchtitle']")).getText());
+	    salesWatchTitle=driver.findElement(By.xpath("//flexipage-component2[1]//span[@class='watchtitle']")).getText();
+		System.out.println("Watch Title: "+salesWatchTitle);
 	    
 		System.out.println("Customer Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Customer']//following::div[1]/lightning-formatted-number")).getText());
 		
@@ -244,13 +249,15 @@ public class TradeYourWatch {
 		WebElement saveButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='slds-modal__container']//button[@title='Save']")));
 		saveButton.click();
 		
+		driver.navigate().refresh();
 	}
     
 	    public static void verifyOriginationDetails()
 	    {
 	    System.out.println("Deal "+driver.findElement(By.xpath("//a[@title='Sales']/span[contains(text(),'Originations')]")).getText());
 	    
-		System.out.println("Watch Title: "+driver.findElement(By.xpath("//flexipage-component2[2]//span[@class='watchtitle']")).getText());
+	    originationWatchTitle=driver.findElement(By.xpath("//flexipage-component2[2]//span[@class='watchtitle']")).getText();
+		System.out.println("Watch Title: "+originationWatchTitle);
 	    
 		System.out.println("Customer Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Customer']//following::div[1]/lightning-formatted-number")).getText());
 		
@@ -275,6 +282,8 @@ public class TradeYourWatch {
 		
 		WebElement saveButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='slds-modal__container']//button[@title='Save']")));
 		saveButton.click();
+		
+		driver.navigate().refresh();
 					
 	}
 	
@@ -299,6 +308,7 @@ public class TradeYourWatch {
 		String serviceCharges=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='forceRelatedListContainer cWB_DealSummary']/article/div[2]/div[18]/div[3]/div/lightning-formatted-number"))).getText();
 	//	serviceCharges.getText();
 		
+		String actualDealSubtatal=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='brandBand_2']//div[@class='forceRelatedListContainer cWB_DealSummary']/article/div[2]/div[19]/div[3]/div/lightning-formatted-number"))).getText();
 		
 		int stotal=Integer.parseInt(salesTotal);
 		int ototal=Integer.parseInt(originationsTotal);
@@ -308,8 +318,66 @@ public class TradeYourWatch {
 		
 		int dTotal=(stotal - ototal)+et+wcp+sc;
 		System.out.println("Deal Subtotal: "+dTotal);
+		Assert.assertEquals(actualDealSubtatal, dTotal);
+		
+	}
+	
+	public static void verifyOfferOnWBX()
+	{
+		driver.findElement(By.xpath("//flexipage-component2[1]//span[text()='WBX Linked']")).click();
+		
+		WebElement swt=driver.findElement(By.xpath("//div[@class='slds-grid primaryFieldRow']//lightning-formatted-text"));
+		swt.getText();
+		Assert.assertEquals(swt, salesWatchTitle);
 		
 		
+	//Market Prize Sale Offer Information
+		WebElement salesOfferInfoTable = driver.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table[@role='grid']"));
+		
+
+		String saleDate=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[1]/lightning-primitive-cell-factory/span/div/lightning-formatted-date-time")).getText();
+		System.out.println("Sales offer Information: "+saleDate);
+		
+		String saleStatus=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[2]/lightning-primitive-cell-factory/span/div/lightning-base-formatted-text")).getText();
+		System.out.println("Sales offer Information: "+saleStatus);
+						
+		String saleTrader=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[3]/lightning-primitive-cell-factory/span/div/lightning-base-formatted-text")).getText();
+		System.out.println("Sales offer Information: "+saleTrader);
+		
+		String saleWatchboxOffer=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[4]/lightning-primitive-cell-factory/span/div/lightning-formatted-number")).getText();
+		System.out.println("Sales offer Information: "+saleWatchboxOffer);
+		
+		String saleClientOffer=salesOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[5]/lightning-primitive-cell-factory/span/div/lightning-formatted-number")).getText();
+		System.out.println("Sales offer Information: "+saleClientOffer);
+		
+		driver.navigate().back();
+		
+		driver.findElement(By.xpath("//flexipage-component2[2]//span[text()='WBX Linked']")).click();
+		
+		WebElement owt=driver.findElement(By.xpath("//div[@class='slds-grid primaryFieldRow']//lightning-formatted-text"));
+		owt.getText();
+		Assert.assertEquals(owt, originationWatchTitle);
+		
+		
+	//Market Prize Origination Offer Information
+		WebElement originationOfferInfoTable = driver.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_originOfferInfoWrapper']//table[@role='grid']"));
+		
+		//Account verification
+		String originationDate=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_originOfferInfoWrapper']//table/tbody/tr[1]/td[1]/lightning-primitive-cell-factory/span/div/lightning-formatted-date-time")).getText();
+		System.out.println("Sales offer Information: "+originationDate);
+		
+		String originationStatus=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[2]/lightning-primitive-cell-factory/span/div/lightning-base-formatted-text")).getText();
+		System.out.println("Sales offer Information: "+originationStatus);
+						
+		String originationTrader=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[3]/lightning-primitive-cell-factory/span/div/lightning-base-formatted-text")).getText();
+		System.out.println("Sales offer Information: "+originationTrader);
+		
+		String originationWatchboxOffer=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[4]/lightning-primitive-cell-factory/span/div/lightning-formatted-number")).getText();
+		System.out.println("Sales offer Information: "+originationWatchboxOffer);
+		
+		String originationClientOffer=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[5]/lightning-primitive-cell-factory/span/div/lightning-formatted-number")).getText();
+		System.out.println("Sales offer Information: "+originationClientOffer);
+
 	}
 	public static void tearDown()
 	{
