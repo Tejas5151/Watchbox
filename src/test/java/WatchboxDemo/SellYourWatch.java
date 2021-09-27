@@ -31,7 +31,8 @@ public class SellYourWatch {
 	static String fisrtName = RandomStringUtils.randomAlphabetic(5);
 	static String lastName = RandomStringUtils.randomAlphabetic(5);
 	static String emailId=fisrtName+".Test@gmail.com";
-	
+	static String accName;
+	static String watchTitle;
 	public SellYourWatch(WebDriver driver)
 	{
 		this.driver = driver;
@@ -56,6 +57,7 @@ public class SellYourWatch {
    		verifyOriginationDetails();
   		negotiateOrigination();
   		verifyDealSummary();
+  		verifyOfferOnWBX();
   		tearDown();
    		
 	}
@@ -216,7 +218,8 @@ public class SellYourWatch {
     {
     System.out.println("Deal "+driver.findElement(By.xpath("//a[@title='Sales']/span[contains(text(),'Originations')]")).getText());
     
-	System.out.println("Watch Title: "+driver.findElement(By.xpath("//flexipage-component2[2]//span[@class='watchtitle']")).getText());
+	watchTitle=driver.findElement(By.xpath("//flexipage-component2[2]//span[@class='watchtitle']")).getText();
+	System.out.println("Watch Title: "+watchTitle);
     
 	System.out.println("Customer Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Customer']//following::div[1]/lightning-formatted-number")).getText());
 	
@@ -244,6 +247,7 @@ public class SellYourWatch {
 		implicitWait();
 		System.out.println("Company Offer: "+driver.findElement(By.xpath("//flexipage-component2[2]//div[text()='Company']//following::div[1]/lightning-formatted-number")).getText());
 		
+		driver.navigate().refresh();
 	}
 	public static void verifyDealSummary() throws InterruptedException
 	{
@@ -265,10 +269,42 @@ public class SellYourWatch {
 		//	serviceCharges.getText();
 			
 			
-		
+			String actualDealSubtatal=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='brandBand_2']//div[@class='forceRelatedListContainer cWB_DealSummary']/article/div[2]/div[14]/div[3]/div/lightning-formatted-number"))).getText();
+			
 			int ototal=Integer.parseInt(originationsTotal);
 
 			System.out.println("Deal Subtotal: "+ototal);
+			Assert.assertEquals(actualDealSubtatal, originationsTotal);
+	}
+	public static void verifyOfferOnWBX()
+	{
+		driver.findElement(By.xpath("//span[text()='WBX Linked']")).click();
+		
+		WebElement wt=driver.findElement(By.xpath("//div[@class='slds-grid primaryFieldRow']//lightning-formatted-text"));
+		wt.getText();
+		Assert.assertEquals(wt, watchTitle);
+		
+		
+	//Market Prize Details
+		WebElement originationOfferInfoTable = driver.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_originOfferInfoWrapper']//table[@role='grid']"));
+		
+		//Account verification
+		String originationDate=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_originOfferInfoWrapper']//table/tbody/tr[1]/td[1]/lightning-primitive-cell-factory/span/div/lightning-formatted-date-time")).getText();
+		System.out.println("Sales offer Information: "+originationDate);
+		
+		String originationStatus=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[2]/lightning-primitive-cell-factory/span/div/lightning-base-formatted-text")).getText();
+		System.out.println("Sales offer Information: "+originationStatus);
+						
+		String originationTrader=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[3]/lightning-primitive-cell-factory/span/div/lightning-base-formatted-text")).getText();
+		System.out.println("Sales offer Information: "+originationTrader);
+		
+		String originationWatchboxOffer=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[4]/lightning-primitive-cell-factory/span/div/lightning-formatted-number")).getText();
+		System.out.println("Sales offer Information: "+originationWatchboxOffer);
+		
+		String originationClientOffer=originationOfferInfoTable.findElement(By.xpath("//flexipage-component2[@data-component-id='wb_salesOfferInfoWrapper']//table/tbody/tr[1]/td[5]/lightning-primitive-cell-factory/span/div/lightning-formatted-number")).getText();
+		System.out.println("Sales offer Information: "+originationClientOffer);
+		
+
 	}
 	public static void tearDown()
 	{
