@@ -33,6 +33,7 @@ public class SellYourWatch {
 	static String emailId=fisrtName+".Test@gmail.com";
 	static String accName;
 	static String watchTitle;
+	
 	public SellYourWatch(WebDriver driver)
 	{
 		this.driver = driver;
@@ -46,23 +47,22 @@ public class SellYourWatch {
 		System.setProperty(webDriver,chromepath);
 		driver = new ChromeDriver(options);
 		
-  	//	SellYourWatch sell=new SellYourWatch(driver);
-  		setUp();
-   		navigateToSellWatchQuote();
-   		sellWatchQuote();
-   		verifyOfferSubmittion();
-   		loginToSalesforce();
-   		verifyAccount();
-   		verifyDeal();
-   		verifyOriginationDetails();
-  		negotiateOrigination();
-  		verifyDealSummary();
-  		verifyOfferOnWBX();
-  		tearDown();
-   		
-	}
+  		SellYourWatch sell=new SellYourWatch(driver);
+  		sell.setUp();
+   		sell.navigateToSellWatchQuote();
+   		sell.sellWatchQuote();
+   		sell.verifyOfferSubmittion();
+   		sell.loginToSalesforce();
+   		sell.verifyAccount();
+   		sell.verifyDeal();
+   		sell.verifyOriginationDetails();
+  		sell.negotiateOrigination();
+  		sell.verifyDealSummary();
+  		sell.verifyOfferOnWBX();
+  		sell.tearDown();
+   			}
 	
-	public static void setUp()
+	public void setUp()
 	{
    		driver.manage().window().maximize();        
    		driver.get(baseUrl);
@@ -72,7 +72,7 @@ public class SellYourWatch {
 	
 	}
 	
-		public static void navigateToSellWatchQuote() throws Exception
+		public void navigateToSellWatchQuote() throws Exception
 		{
 			WebElement cookieButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='affirm consent-btn close-button']")));
 			cookieButton.click();
@@ -93,7 +93,7 @@ public class SellYourWatch {
 	   		getMyQuoteButton.click();
 		
 		}
-   		public static void sellWatchQuote() throws InterruptedException
+   		public void sellWatchQuote() throws InterruptedException
    		{
    	   	//CONTACT INFORMATION
    		implicitWait(); 
@@ -120,7 +120,7 @@ public class SellYourWatch {
    		implicitWait();
    		}
 	
-		public static void verifyOfferSubmittion()
+		public void verifyOfferSubmittion()
 		{
 			WebElement actualSuccessMessage=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class=\"col-12 col-lg-9 col-xl-7 text-center\"]/h1")));
 			actualSuccessMessage.getText();
@@ -128,12 +128,12 @@ public class SellYourWatch {
 			System.out.println(actualSuccessMessage);
 			Assert.assertEquals(actualSuccessMessage, expectedSuccessMessage);
 		}
-	public static void implicitWait()
+	public void implicitWait()
 	{
 	driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
 	}
 	
-	public static void loginToSalesforce() throws InterruptedException
+	public void loginToSalesforce() throws InterruptedException
 	{
 		driver.navigate().to(sfUrl);
 		driver.findElement(By.id("username")).sendKeys(username);
@@ -142,7 +142,7 @@ public class SellYourWatch {
 		Thread.sleep(15000);
 	}
 	
-	public static void verifyAccount() throws Exception
+	public void verifyAccount() throws Exception
 	{
 		
 		WebElement searchBox=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_neutral search-button slds-truncate' and @type='button']")));
@@ -184,7 +184,7 @@ public class SellYourWatch {
 		System.out.println("Phone Number: "+accPhoneNumberText);
 
 	}
-	public static void verifyDeal() throws InterruptedException
+	public void verifyDeal() throws InterruptedException
 	{
    		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("window.scrollBy(0,450)");
@@ -214,7 +214,7 @@ public class SellYourWatch {
 	    Thread.sleep(5000);
 	}	    
 	
-    public static void verifyOriginationDetails()
+    public void verifyOriginationDetails()
     {
     System.out.println("Deal "+driver.findElement(By.xpath("//a[@title='Sales']/span[contains(text(),'Originations')]")).getText());
     
@@ -229,7 +229,7 @@ public class SellYourWatch {
 	
      
 }
-	public static void negotiateOrigination() throws InterruptedException
+	public void negotiateOrigination() throws InterruptedException
 	{	
 		//Negotiate
 		WebElement showMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_icon-border-filled slds-button_icon-small']")));
@@ -249,7 +249,7 @@ public class SellYourWatch {
 		
 		driver.navigate().refresh();
 	}
-	public static void verifyDealSummary() throws InterruptedException
+	public void verifyDealSummary() throws InterruptedException
 	{
 		
    		JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -276,7 +276,7 @@ public class SellYourWatch {
 			System.out.println("Deal Subtotal: "+ototal);
 			Assert.assertEquals(actualDealSubtatal, originationsTotal);
 	}
-	public static void verifyOfferOnWBX()
+	public void verifyOfferOnWBX()
 	{
 		driver.findElement(By.xpath("//span[text()='WBX Linked']")).click();
 		
@@ -306,7 +306,7 @@ public class SellYourWatch {
 		
 
 	}
-	public static void tearDown()
+	public void tearDown()
 	{
 		driver.close();
 	}

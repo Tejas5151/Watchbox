@@ -19,7 +19,7 @@ import com.watchbox.utilities.ReadConfig;
 public class ContactUs {
 
 	static WebDriver driver;
-	static WebDriverWait wait=new WebDriverWait(driver, 20);
+	WebDriverWait wait=new WebDriverWait(driver, 20);
 	static ReadConfig readconfig=new ReadConfig();
 	static String webDriver=readconfig.getWebDriver();
 	static String chromepath=readconfig.getChromepath();
@@ -38,25 +38,25 @@ public class ContactUs {
 		}
 	
 	public static void main(String[] args) throws Exception {
+				
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("--disable-notifications");
+			System.setProperty(webDriver,chromepath);
+			driver= new ChromeDriver();
 
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--disable-notifications");
-		System.setProperty(webDriver,chromepath);
-		driver = new ChromeDriver(options);
-		
-		//ContactUs cu=new ContactUs(driver);
-		setUp();
-		navigateToContactUs();
-		submitMessage();
-		contactMessageConfirmation();
-		loginToSalesforce();
-		verifyAccount();
-		verifyDeal();
-		tearDown();
-		
-		
-}
-	public static void setUp()
+	   		
+	  		ContactUs cu=new ContactUs(driver);
+	  		cu.setUp();
+	  		cu.navigateToContactUs();
+	  		cu.submitMessage();  
+	  		cu.contactMessageConfirmation();
+			cu.loginToSalesforce();
+			cu.verifyAccount();
+			cu.verifyDeal();
+	  		cu.tearDown();
+	  		 
+		}
+	public void setUp()
 	{
 
 		driver.manage().window().maximize();     
@@ -64,10 +64,11 @@ public class ContactUs {
 		implicitWait();
 		String ActualTitle = driver.getTitle();
 		Assert.assertEquals(ExpectedTitle, ActualTitle);
+		
 	
 	}
 	
-	public static void navigateToContactUs() throws InterruptedException
+	public void navigateToContactUs() throws InterruptedException
 	{
 		WebElement cookieButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='affirm consent-btn close-button']")));
 		cookieButton.click();
@@ -78,7 +79,7 @@ public class ContactUs {
 			
 	}
 	
-	public static void submitMessage() throws InterruptedException
+	public void submitMessage() throws InterruptedException
 	{
 		driver.findElement(By.id("first_name")).sendKeys(fisrtName);
 		driver.findElement(By.id("last_name")).sendKeys("Test");
@@ -93,12 +94,12 @@ public class ContactUs {
 		driver.findElement(By.id("contactusButton")).click();
 		
 	}
-	public static void implicitWait()
+	public void implicitWait()
 	{
 		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
 	}
 	
-	public static void contactMessageConfirmation() throws InterruptedException
+	public void contactMessageConfirmation() throws InterruptedException
 	{
 		Thread.sleep(5000);
 		String actualSuccessMessage=driver.findElement(By.xpath("//div[@class='contact-confirmation-page']/div/div/span")).getText();
@@ -108,7 +109,7 @@ public class ContactUs {
   		Thread.sleep(3000);
 	}
 	
-	public static void loginToSalesforce() throws InterruptedException
+	public void loginToSalesforce() throws InterruptedException
 	{
 		driver.navigate().to(sfUrl);
 		driver.findElement(By.id("username")).sendKeys(username);
@@ -117,7 +118,7 @@ public class ContactUs {
 		Thread.sleep(15000);
 	}
 	
-	public static void verifyAccount() throws Exception
+	public void verifyAccount() throws Exception
 	{
 		WebElement searchBox=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_neutral search-button slds-truncate' and @type='button']")));
 		searchBox.click();
@@ -159,7 +160,7 @@ public class ContactUs {
 		
 	}
 	
-		public static void verifyDeal() throws InterruptedException
+		public void verifyDeal() throws InterruptedException
 	{
    		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("window.scrollBy(0,450)");
@@ -193,7 +194,7 @@ public class ContactUs {
 		System.out.println("Deal "+driver.findElement(By.xpath("//flexipage-component2[1]//a[@title='Sales'][1]")).getText());
 		
 	}
-	static void tearDown()
+	 void tearDown()
 	{
 		driver.close();
 	}
