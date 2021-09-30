@@ -93,28 +93,28 @@ public class MakeAnOffer {
   		js.executeScript("window.scrollBy(0,4400)");
 		implicitWait();
 		
-   		//WebElement watch=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//img[@src='https://watchbox-cdn.imgix.net/posted-product-images/637666106718156028.jpg?w=1184&h=1184']")));
-   		//watch.click();
+   		WebElement watch=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//img[@src='https://watchbox-cdn.imgix.net/posted-product-images/637666106718156028.jpg?w=1184&h=1184']")));
+   		watch.click();
 
-		
-List<WebElement> allWatches = driver.findElements(By.xpath("//*[@id=\"grid-main-container\"]/div"));
+   		implicitWait();
+   		WebElement mknofferButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='make-an-offers']")));
+   		mknofferButton.click();  	
+   		
+/*List<WebElement> allWatches = driver.findElements(By.xpath("//*[@id=\"grid-main-container\"]/div"));
 		
 		for( WebElement watch : allWatches){
 			
 			System.out.println(watch.getText());
 			System.out.println(watch);
 			System.out.println("*********************************************************************");
+			
 		}
 		
-		/*Boolean isText=driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).isDisplayed();
-   		 if(isText==true)
-   		 {
-   			driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).click();
+		//Boolean isText=driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).isDisplayed();
+   		 //if(isText==true)
+   		 //{
+   		//	driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).click();
    		    		 }*/
-
-  // 		implicitWait();
-   //		WebElement mknofferButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='make-an-offers']")));
-   //		mknofferButton.click();  	
 
 		}
 
