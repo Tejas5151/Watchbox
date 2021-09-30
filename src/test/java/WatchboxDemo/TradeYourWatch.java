@@ -20,7 +20,7 @@ public class TradeYourWatch {
 
 	
 	static WebDriver driver;
-	static WebDriverWait wait=new WebDriverWait(driver, 20);
+	WebDriverWait wait=new WebDriverWait(driver, 20);
 	static ReadConfig readconfig=new ReadConfig();
 	static String webDriver=readconfig.getWebDriver();
 	static String chromepath=readconfig.getChromepath();
@@ -49,23 +49,24 @@ public class TradeYourWatch {
 		driver= new ChromeDriver();
 
    		
-  		//TradeYourWatch trade=new TradeYourWatch(driver);
-  		setUp();
-		navigateToTradeWatchQuote();
-		tradeQuote();  
-		verifyOfferSubmittion();
-		loginToSalesforce();
-		verifyDeal();
-		verifySalesDetails();
-		verifyOriginationDetails();
-		negotiateSales();
-		negotiateOrigination();
-		verifyDealSummary();
-		verifyOfferOnWBX();
-  		tearDown();
+  		TradeYourWatch trade=new TradeYourWatch(driver);
+  		trade.setUp();
+  		trade.navigateToTradeWatchQuote();
+  		trade.tradeQuote();  
+  		trade.verifyOfferSubmittion();
+  		trade.loginToSalesforce();
+  		trade.verifyAccount();
+  		trade.verifyDeal();
+  		trade.verifySalesDetails();
+  		trade.verifyOriginationDetails();
+  		trade.negotiateSales();
+  		trade.negotiateOrigination();
+  		trade.verifyDealSummary();
+		trade.verifyOfferOnWBX();
+		trade.tearDown();
 	}
 	
-	public static void setUp()
+	public void setUp()
 	{
    		driver.manage().window().maximize();        
    		driver.get(baseUrl);
@@ -75,7 +76,7 @@ public class TradeYourWatch {
 	
 	}
 
-	public static void navigateToTradeWatchQuote()
+	public void navigateToTradeWatchQuote()
 	{
 		WebElement cookieButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='affirm consent-btn close-button']")));
 		cookieButton.click();
@@ -91,7 +92,7 @@ public class TradeYourWatch {
 		driver.findElement(By.xpath("//a[@data-receptor='trade']")).click();
 		implicitWait();
 	}
-	public static void tradeQuote() throws Exception
+	public void tradeQuote() throws Exception
 	{
    		//CONTACT INFORMATION
 		implicitWait();
@@ -125,7 +126,7 @@ public class TradeYourWatch {
    		implicitWait();
 	}
 	
-	public static void verifyOfferSubmittion()
+	public void verifyOfferSubmittion()
 	{
 		String actualSuccessMessage=driver.findElement(By.xpath("//div[@class=\"col-12 col-lg-9 col-xl-7 text-center\"]/h1")).getText();
 		String expectedSuccessMessage="Quote request submitted";
@@ -133,12 +134,12 @@ public class TradeYourWatch {
 		Assert.assertEquals(actualSuccessMessage, expectedSuccessMessage);
 	}
 	
-	public static void implicitWait()
+	public void implicitWait()
 	{
 	driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
 	}
 	
-	public static void loginToSalesforce() throws InterruptedException
+	public void loginToSalesforce() throws InterruptedException
 	{
 		driver.navigate().to(sfUrl);
 		driver.findElement(By.id("username")).sendKeys(username);
@@ -147,7 +148,7 @@ public class TradeYourWatch {
 		Thread.sleep(15000);
 	}
 	
-	public static void verifyAccount() throws Exception
+	public void verifyAccount() throws Exception
 	{
 		
 		WebElement searchBox=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_neutral search-button slds-truncate' and @type='button']")));
@@ -188,7 +189,7 @@ public class TradeYourWatch {
 		System.out.println("Phone Number: "+accPhoneNumberText);
 
 	}
-	public static void verifyDeal() throws InterruptedException
+	public void verifyDeal() throws InterruptedException
 	{
    		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("window.scrollBy(0,450)");
@@ -218,7 +219,7 @@ public class TradeYourWatch {
 	    Thread.sleep(5000);
 	}
 	
-    public static void verifySalesDetails()
+    public void verifySalesDetails()
     {
 	    System.out.println("Deal "+driver.findElement(By.xpath("//a[@title='Sales']/span[contains(text(),'Sales')]")).getText());
 	    
@@ -232,7 +233,7 @@ public class TradeYourWatch {
 		System.out.println("Company Offer: "+driver.findElement(By.xpath("//flexipage-component2[1]//div[text()='Company']//following::div[1]/lightning-formatted-number")).getText());	
     }
     
-	public static void negotiateSales()
+	public void negotiateSales()
 	{	
 		WebElement showMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//flexipage-component2[2]//button[@class='slds-button slds-button_icon-border-filled slds-button_icon-small']")));
 		showMenu.click();
@@ -252,7 +253,7 @@ public class TradeYourWatch {
 		driver.navigate().refresh();
 	}
     
-	    public static void verifyOriginationDetails()
+	    public void verifyOriginationDetails()
 	    {
 	    System.out.println("Deal "+driver.findElement(By.xpath("//a[@title='Sales']/span[contains(text(),'Originations')]")).getText());
 	    
@@ -268,7 +269,7 @@ public class TradeYourWatch {
 	     
 	}
 	
-	public static void negotiateOrigination()
+	public void negotiateOrigination()
 	{	
 		//Negotiate
 		WebElement showMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//flexipage-component2[2]//button[@class='slds-button slds-button_icon-border-filled slds-button_icon-small']")));
@@ -287,7 +288,7 @@ public class TradeYourWatch {
 					
 	}
 	
-	public static void verifyDealSummary() throws InterruptedException
+	public void verifyDealSummary() throws InterruptedException
 	{
 		
    		JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -322,7 +323,7 @@ public class TradeYourWatch {
 		
 	}
 	
-	public static void verifyOfferOnWBX()
+	public void verifyOfferOnWBX()
 	{
 		driver.findElement(By.xpath("//flexipage-component2[1]//span[text()='WBX Linked']")).click();
 		
@@ -379,7 +380,7 @@ public class TradeYourWatch {
 		System.out.println("Sales offer Information: "+originationClientOffer);
 
 	}
-	public static void tearDown()
+	public void tearDown()
 	{
 		driver.close();
 	}

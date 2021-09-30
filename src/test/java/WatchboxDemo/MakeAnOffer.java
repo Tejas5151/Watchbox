@@ -1,7 +1,5 @@
 package WatchboxDemo;
 
-import static org.testng.Assert.assertEquals;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -13,19 +11,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import com.watchbox.utilities.ReadConfig;
 
-import net.bytebuddy.utility.RandomString;
-
 public class MakeAnOffer {
 
 	static WebDriver driver;
-	static WebDriverWait wait=new WebDriverWait(driver, 20);
+	WebDriverWait wait=new WebDriverWait(driver, 20);
 	static ReadConfig readconfig=new ReadConfig();
 	static String webDriver=readconfig.getWebDriver();
 	static String chromepath=readconfig.getChromepath();
@@ -53,22 +48,23 @@ public class MakeAnOffer {
 		driver = new ChromeDriver(options);
 			
 		
-		//MakeAnOffer mknoffer=new MakeAnOffer(driver);
-  		setUp();
-  		navigateToWatchDetails();
-  		submitOffer();
-        verifyOfferSubmittion();
-  		loginToSalesforce();
-  		verifyAccount();
-  		verifyDeal();
-  		verifySalesDetails();
-  		negotiateSales();
-  		verifyDealSummary();
-  		verifyOfferOnWBX();
-   		tearDown();
+		MakeAnOffer mknoffer=new MakeAnOffer(driver);
+		mknoffer.setUp();
+		mknoffer.navigateToWatchDetails();
+	/*	mknoffer.submitOffer();
+		mknoffer.verifyOfferSubmittion();
+		mknoffer.loginToSalesforce();
+		mknoffer.verifyAccount();
+		mknoffer.verifyDeal();
+		mknoffer.verifySalesDetails();
+		mknoffer.negotiateSales();
+		mknoffer.verifyDealSummary();
+		mknoffer.verifyOfferOnWBX();
+		mknoffer.tearDown();
+		*/
    		}
 	
-	public static void setUp()
+	public void setUp()
 	{
 
 		driver.manage().window().maximize();     
@@ -78,7 +74,7 @@ public class MakeAnOffer {
 		Assert.assertEquals(ExpectedTitle, ActualTitle);
 	
 	}
-	public static void navigateToWatchDetails() throws InterruptedException
+	public void navigateToWatchDetails() throws InterruptedException
 		{
 		WebElement cookieButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='affirm consent-btn close-button']")));
 		cookieButton.click();
@@ -97,22 +93,32 @@ public class MakeAnOffer {
   		js.executeScript("window.scrollBy(0,4400)");
 		implicitWait();
 		
-   		WebElement watch=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//img[@src='https://watchbox-cdn.imgix.net/posted-product-images/637666106718156028.jpg?w=1184&h=1184']")));
-   		watch.click();
+   		//WebElement watch=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//img[@src='https://watchbox-cdn.imgix.net/posted-product-images/637666106718156028.jpg?w=1184&h=1184']")));
+   		//watch.click();
 
+		
+List<WebElement> allWatches = driver.findElements(By.xpath("//*[@id=\"grid-main-container\"]/div"));
+		
+		for( WebElement watch : allWatches){
+			
+			System.out.println(watch.getText());
+			System.out.println(watch);
+			System.out.println("*********************************************************************");
+		}
+		
 		/*Boolean isText=driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).isDisplayed();
    		 if(isText==true)
    		 {
    			driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).click();
    		    		 }*/
 
-   		implicitWait();
-   		WebElement mknofferButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='make-an-offers']")));
-   		mknofferButton.click();  	
+  // 		implicitWait();
+   //		WebElement mknofferButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='make-an-offers']")));
+   //		mknofferButton.click();  	
 
 		}
 
-		public static void submitOffer() throws Exception
+		public void submitOffer() throws Exception
 		{
 			implicitWait();
    			driver.findElement(By.id("first_name")).sendKeys(fisrtName);
@@ -128,7 +134,7 @@ public class MakeAnOffer {
 		
 		}
 		
-		public static void verifyOfferSubmittion() throws InterruptedException
+		public void verifyOfferSubmittion() throws InterruptedException
 		{
 			Thread.sleep(5000);
 			String actualSuccessMessage=driver.findElement(By.xpath("//div[@class='heading']")).getText();
@@ -137,12 +143,12 @@ public class MakeAnOffer {
 	  		Assert.assertEquals(actualSuccessMessage, expectedSuccessMessage);
 	  			}
 		
-		public static void implicitWait()
+		public void implicitWait()
 		{
 			driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
 		}
 		
-		public static void loginToSalesforce() throws InterruptedException
+		public void loginToSalesforce() throws InterruptedException
 		{
 			driver.navigate().to(sfUrl);
 			driver.findElement(By.id("username")).sendKeys(username);
@@ -151,7 +157,7 @@ public class MakeAnOffer {
 			Thread.sleep(15000);
 		}
 		
-		public static void verifyAccount() throws Exception
+		public void verifyAccount() throws Exception
 		{
 			WebElement searchBox=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_neutral search-button slds-truncate' and @type='button']")));
 			searchBox.click();
@@ -192,7 +198,7 @@ public class MakeAnOffer {
 			
 		}
 		
-			public static void verifyDeal() throws InterruptedException
+			public void verifyDeal() throws InterruptedException
 		{
 	   		JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("window.scrollBy(0,450)");
@@ -224,7 +230,7 @@ public class MakeAnOffer {
 			
 		}
 			
-		    public static void verifySalesDetails()
+		    public void verifySalesDetails()
 		    {
 			    System.out.println("Deal "+driver.findElement(By.xpath("//a[@title='Sales']/span[contains(text(),'Sales')]")).getText());
 			    
@@ -239,7 +245,7 @@ public class MakeAnOffer {
 		    }
 	    
 		    
-			public static void negotiateSales()
+			public void negotiateSales()
 			{	
 				WebElement showMenu=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='slds-button slds-button_icon-border-filled slds-button_icon-small']")));
 				showMenu.click();
@@ -260,10 +266,11 @@ public class MakeAnOffer {
 				
 			}	    
 
-			public static void verifyDealSummary() throws InterruptedException
+			public void verifyDealSummary() throws InterruptedException
 			{
 				
 		   		JavascriptExecutor js = (JavascriptExecutor) driver;
+		   		
 				js.executeScript("window.scrollBy(0,450)");
 				
 				implicitWait();
@@ -293,7 +300,7 @@ public class MakeAnOffer {
 					
 			}
 			
-			public static void verifyOfferOnWBX()
+			public void verifyOfferOnWBX()
 			{
 				driver.findElement(By.xpath("//flexipage-component2[1]//span[text()='WBX Linked']")).click();
 				
@@ -326,7 +333,7 @@ public class MakeAnOffer {
 
 			
 		
-		public static void tearDown()
+		public void tearDown()
 		{
 			driver.close();
 		}
