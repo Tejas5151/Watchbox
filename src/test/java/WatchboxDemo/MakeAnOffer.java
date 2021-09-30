@@ -100,7 +100,7 @@ public class MakeAnOffer {
    		WebElement mknofferButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='make-an-offers']")));
    		mknofferButton.click();  	
    		
-/*List<WebElement> allWatches = driver.findElements(By.xpath("//*[@id=\"grid-main-container\"]/div"));
+   		/*List<WebElement> allWatches = driver.findElements(By.xpath("//*[@id=\"grid-main-container\"]/div"));
 		
 		for( WebElement watch : allWatches){
 			
@@ -110,11 +110,11 @@ public class MakeAnOffer {
 			
 		}
 		
-		//Boolean isText=driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).isDisplayed();
-   		 //if(isText==true)
-   		 //{
-   		//	driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).click();
-   		    		 }*/
+		Boolean isText=driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).isDisplayed();
+   		if(isText==true)
+   	    {
+   			driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).click();
+    		 }*/
 
 		}
 
