@@ -25,6 +25,7 @@ public class SellYourWatch {
 	static String chromepath=readconfig.getChromepath();
 	static String baseUrl = readconfig.getApplicationUrl();
 	static String sfUrl = readconfig.getSFUrl();
+	static String location=readconfig.getLocation();
 	static String username = readconfig.getUsername();
 	static String password = readconfig.getPassword();
 	static String ExpectedTitle =readconfig.getExpectedTitle();
@@ -49,6 +50,7 @@ public class SellYourWatch {
 		
   		SellYourWatch sell=new SellYourWatch(driver);
   		sell.setUp();
+  		sell.loactionSetting();
    		sell.navigateToSellWatchQuote();
    		sell.sellWatchQuote();
    		sell.verifyOfferSubmittion();
@@ -71,7 +73,14 @@ public class SellYourWatch {
   		Assert.assertEquals(ExpectedTitle, ActualTitle);
 	
 	}
-	
+	public void loactionSetting() throws Exception
+	{
+		driver.findElement(By.xpath("/html/body/div[1]/header/div[1]/div[3]/div/div[1]/div/div/nav/div/div[1]/div[1]/ul/li[1]/a")).click();
+		Thread.sleep(3000);
+		driver.findElement(By.id("country")).sendKeys(location);
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//button[@value='Confirm']")).click();
+	}
 		public void navigateToSellWatchQuote() throws Exception
 		{
 			WebElement cookieButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='affirm consent-btn close-button']")));

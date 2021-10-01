@@ -62,4 +62,10 @@ public class ReadConfig {
 		String expectedTitle=pro.getProperty("expectedTitle");
 		return expectedTitle;
 	}
+	
+	public String getLocation()
+	{
+		String location=pro.getProperty("location");
+		return location;
+	}
 }
