@@ -1,5 +1,6 @@
 package WatchboxDemo;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +27,7 @@ public class MakeAnOffer {
 	static String chromepath=readconfig.getChromepath();
 	static String baseUrl = readconfig.getApplicationUrl();
 	static String sfUrl = readconfig.getSFUrl();
+	static String location=readconfig.getLocation();
 	static String username = readconfig.getUsername();
 	static String password = readconfig.getPassword();
 	static String ExpectedTitle =readconfig.getExpectedTitle();
@@ -50,8 +52,9 @@ public class MakeAnOffer {
 		
 		MakeAnOffer mknoffer=new MakeAnOffer(driver);
 		mknoffer.setUp();
+		mknoffer.loactionSetting();
 		mknoffer.navigateToWatchDetails();
-	/*	mknoffer.submitOffer();
+		mknoffer.submitOffer();
 		mknoffer.verifyOfferSubmittion();
 		mknoffer.loginToSalesforce();
 		mknoffer.verifyAccount();
@@ -61,7 +64,6 @@ public class MakeAnOffer {
 		mknoffer.verifyDealSummary();
 		mknoffer.verifyOfferOnWBX();
 		mknoffer.tearDown();
-		*/
    		}
 	
 	public void setUp()
@@ -73,6 +75,14 @@ public class MakeAnOffer {
 		String ActualTitle = driver.getTitle();
 		Assert.assertEquals(ExpectedTitle, ActualTitle);
 	
+	}
+	public void loactionSetting() throws Exception
+	{
+		driver.findElement(By.xpath("/html/body/div[1]/header/div[1]/div[3]/div/div[1]/div/div/nav/div/div[1]/div[1]/ul/li[1]/a")).click();
+		Thread.sleep(3000);
+		driver.findElement(By.id("country")).sendKeys(location);
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//button[@value='Confirm']")).click();
 	}
 	public void navigateToWatchDetails() throws InterruptedException
 		{
@@ -90,27 +100,39 @@ public class MakeAnOffer {
    		watchFamily.click();
    		  	
    		implicitWait();
-  		js.executeScript("window.scrollBy(0,4400)");
-		implicitWait();
+ // 		js.executeScript("window.scrollBy(0,4400)");
+	//	implicitWait();
 		
-   		WebElement watch=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//img[@src='https://watchbox-cdn.imgix.net/posted-product-images/637666106718156028.jpg?w=1184&h=1184']")));
-   		watch.click();
+   	//	WebElement watch=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//img[@src='https://watchbox-cdn.imgix.net/posted-product-images/637666106718156028.jpg?w=1184&h=1184']")));
+   	//	watch.click();
 
+   		List<WebElement> allWatches = driver.findElements(By.xpath("//div[@class='grid-container']/div"));
+			  int i=0; 		
+	for( WebElement watch1 : allWatches){
+				i++;		
+		if(watch1.getText().contains("Coming Soon") && watch1.getText().contains("$") )
+		{
+			continue;
+			
+		}
+		else if(watch1.getText().contains("$"))
+		{
+		System.out.println(watch1.getText());
+		Thread.sleep(3000);
+		System.out.println("Value of I:"+i);
+		WebElement w=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='grid-container']/div["+i+"]//ancestor::div[@class='img-placement wm']")));
+		w.click();
+	break;
+		}
+		else{continue;}
+		}
+	
    		implicitWait();
    		WebElement mknofferButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='make-an-offers']")));
    		mknofferButton.click();  	
    		
-   		/*List<WebElement> allWatches = driver.findElements(By.xpath("//*[@id=\"grid-main-container\"]/div"));
-		
-		for( WebElement watch : allWatches){
-			
-			System.out.println(watch.getText());
-			System.out.println(watch);
-			System.out.println("*********************************************************************");
-			
-		}
-		
-		Boolean isText=driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).isDisplayed();
+   		
+	/*	Boolean isText=driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).isDisplayed();
    		if(isText==true)
    	    {
    			driver.findElement(By.xpath("//div[text()='Continue to the United States site']")).click();
