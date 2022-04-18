@@ -1,14 +1,11 @@
 package com.watchbox.testCases;
 
-import org.apache.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.Test;
 import com.watchbox.pageObjects.BrandsPage;
 import com.watchbox.pageObjects.HomePage;
-import com.watchbox.pageObjects.ModelPage;
 
 public class TC_MakeAnOffer extends Base {
-
 	@Test(priority = 1)
 	public void navigateToWatchbox() throws Exception {
 		HomePage homepage = new HomePage(driver);
